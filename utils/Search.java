@@ -10,48 +10,70 @@ public class Search
 {
     public static int nodeVisited;
     public static int maxLength;
-    // This hash table is used to store the visited states. Value can be true or null.
-    // Keys are in string. True indicates that a state is already visited.
-    private static Hashtable<String, Boolean> visited_states;
-  
+    
     public static Node8 GeneralSearch(Node8 problem, String Que_Fn)
     {
+        // Possible choices for Que_fn are BFS, DFS, IDS, GREEDY, ASTAR, IDA
         Node8 node;
         Vector<Node8> nodeList = new Vector<Node8>();
-        visited_states = new Hashtable<String, Boolean>();
         nodeVisited = 0;
         maxLength = 0;
+        int depth_limit = 0;
         
         nodeList.add(problem);
-        visited_states.put(problem.state_s, true);
-        
+
         while(true)
         {
             if (nodeList.size() > maxLength)
                 maxLength = nodeList.size();
             if (nodeList.isEmpty())
             {
-                System.out.println("No Solution!");
-                return null;
+                if (Que_Fn.equals("IDS"))
+                {
+                    depth_limit++;
+                    nodeList.add(problem);
+                }
+                else
+                {
+                    System.out.println("No Solution!");
+                    return null;
+                }
             }
             node = nodeList.firstElement();
             nodeList.removeElementAt(0);
             nodeVisited++;
             
-            if (Node8.goal.equals(node.state_s))
+            if (Node8.Solved(node))
             {
               System.out.println("Solution:");
               return node;
             }
+            
             if (Que_Fn.equals("BFS"))
-                nodeList = Que_Fn_BFS(nodeList, expand(node));
+                nodeList = Que_Fn_BFS(nodeList, node);
             if (Que_Fn.equals("DFS"))
-                nodeList = Que_Fn_DFS(nodeList, expand(node));
+                nodeList = Que_Fn_DFS(nodeList, node);
+            if (Que_Fn.equals("IDS"))
+                nodeList = Que_Fn_DLS(nodeList, node, depth_limit);
+            if (Que_Fn.equals("GREEDY"))
+                nodeList = Que_Fn_GREEDY(nodeList, node);
         }
     }
     
-    private static Vector<Node8> Que_Fn_BFS(Vector<Node8> src, Vector<Node8> expanded)
+    private static Vector<Node8> Que_Fn_GREEDY(Vector<Node8> src, Node8 node)
     {
+        Vector<Node8> expanded = expand(node);
+        for (int i = 0; i < expanded.size(); i++)
+        {
+            src.addElement(expanded.get(i));
+        }
+        // Sort to be impelemented
+        return src;
+    }
+    
+    private static Vector<Node8> Que_Fn_BFS(Vector<Node8> src, Node8 node)
+    {
+        Vector<Node8> expanded = expand(node);
         for (int i = 0; i < expanded.size(); i++)
         {
             src.insertElementAt(expanded.get(i), src.size());
@@ -59,8 +81,9 @@ public class Search
         return src;
     }
     
-    private static Vector<Node8> Que_Fn_DFS(Vector<Node8> src, Vector<Node8> expanded)
+    private static Vector<Node8> Que_Fn_DFS(Vector<Node8> src, Node8 node)
     {
+        Vector<Node8> expanded = expand(node);
         for (int i = 0; i < expanded.size(); i++)
         {
             src.insertElementAt(expanded.get(i), 0);
@@ -68,56 +91,83 @@ public class Search
         return src;
     }
     
+    private static Vector<Node8> Que_Fn_DLS(Vector<Node8> src, Node8 node, int depth_limit)
+    {
+        if (node.depth() == depth_limit)
+        {
+            return src;
+        }
+        else
+        {
+            Vector<Node8> expanded = expand(node);
+            for (int i = 0; i < expanded.size(); i++)
+            {
+                src.insertElementAt(expanded.get(i), 0);
+            }
+            return src;
+        }
+    }
+    
     private static Vector<Node8> expand(Node8 node)
     {
         Vector<Node8> expandedList = new Vector<Node8>();
-        // Node8 new_node;
-        
-        // new_node = Node8.up(node);
-        // if (new_node!=null)
-        // {
-        //     if (!visited_states.containsKey(new_node.state_s))
-        //     {
-        //         visited_states.put(new_node.state_s, true);
-        //         expandedList.add(new_node);
-        //     }
-        // }
-        // new_node = Node8.down(node);
-        // if (new_node!=null)
-        // {
-        //     if (!visited_states.containsKey(new_node.state_s))
-        //     {
-        //         visited_states.put(new_node.state_s, true);
-        //         expandedList.add(new_node);
-        //     }
-        // }
-        // new_node = Node8.left(node);
-        // if (new_node!=null)
-        // {
-        //     if (!visited_states.containsKey(new_node.state_s))
-        //     {
-        //         visited_states.put(new_node.state_s, true);
-        //         expandedList.add(new_node);
-        //     }
-        // }
-        // new_node = Node8.right(node);
-        // if (new_node!=null)
-        // {
-        //     if (!visited_states.containsKey(new_node.state_s))
-        //     {
-        //         visited_states.put(new_node.state_s, true);
-        //         expandedList.add(new_node);
-        //     }
-        // }
         
         if (Node8.up(node)!=null)
-            expandedList.add(Node8.up(node));
+        {
+            if (node.path.size() > 0)
+            {
+                if (!node.path.lastElement().equals("DOWN")) // prune the branch: up-> down-> up-> down...
+                {
+                    expandedList.add(Node8.up(node));
+                }
+            }
+            else
+            {
+                expandedList.add(Node8.up(node));
+            }
+        }
         if (Node8.down(node)!=null)
-            expandedList.add(Node8.down(node));
+        {
+            if (node.path.size() > 0)
+            {
+                if (!node.path.lastElement().equals("UP"))
+                {
+                    expandedList.add(Node8.down(node));
+                }
+            }
+            else
+            {
+                expandedList.add(Node8.down(node));
+            }
+        }
         if (Node8.left(node)!=null)
-            expandedList.add(Node8.left(node));
+        {
+            if (node.path.size() > 0)
+            {
+                if (!node.path.lastElement().equals("RIGHT"))
+                {
+                    expandedList.add(Node8.left(node));
+                }
+            }
+            else
+            {
+                expandedList.add(Node8.left(node));
+            }
+        }
         if (Node8.right(node)!=null)
-            expandedList.add(Node8.right(node));
+        {
+            if (node.path.size() > 0)
+            {
+                if (!node.path.lastElement().equals("LEFT"))
+                {
+                    expandedList.add(Node8.right(node));
+                }
+            }
+            else
+            {
+                expandedList.add(Node8.right(node));
+            }
+        }
             
         return expandedList;
     }

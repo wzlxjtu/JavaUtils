@@ -13,7 +13,7 @@ public class Node8
     public int h; // heuristic value
     public int depth; // depth from the root
     public Vector<String> path; // list of moves
-    
+    public static String goal = "(1 2 3 8 0 4 7 6 5)";
     public Node8(String s)
     {
       state_s = s;
@@ -23,17 +23,36 @@ public class Node8
       path = new Vector<String>();
     }
     
+    public Node8(Node8 node)
+    {
+      state_s = new String(node.state_s);
+      state_a = new Array(node.state_a);
+      h = node.h;
+      depth = node.depth;
+      path = new Vector<String>(node.path);
+    }
+    
     public void printPath()
     {
       for (int i = 0; i < path.size(); i++)
       {
-        System.out.println(path.get(i));
+        System.out.print(path.get(i) + " ");
       }
+      System.out.println("");
+    }
+    
+    public void printPuzzle()
+    {
+        System.out.println("Puzzle State:");
+        System.out.println(state_a.get(0) + " " + state_a.get(1) + " " + state_a.get(2));
+        System.out.println(state_a.get(3) + " " + state_a.get(4) + " " + state_a.get(5));
+        System.out.println(state_a.get(6) + " " + state_a.get(7) + " " + state_a.get(8));
     }
     
     // After each movement, a new node is generated
-    public static Node8 up(Node8 node) // move 0 upward
+    public static Node8 up(Node8 src) // move 0 upward
     {
+        Node8 node = new Node8(src);
         if ((node.ZeroPos() != 0) && (node.ZeroPos() != 1) && (node.ZeroPos() != 2))
         {
           node.swap(node.ZeroPos(), node.ZeroPos() - 3);
@@ -45,8 +64,9 @@ public class Node8
           return null;
         }
     }
-    public static Node8 down(Node8 node) // move 0 downward
+    public static Node8 down(Node8 src) // move 0 downward
     {
+        Node8 node = new Node8(src);
         if ((node.ZeroPos() != 6) && (node.ZeroPos() != 7) && (node.ZeroPos() != 8))
         {
           node.swap(node.ZeroPos(), node.ZeroPos() + 3);
@@ -58,8 +78,9 @@ public class Node8
           return null;
         }
     }
-    public static Node8 left(Node8 node) // move 0 leftward
+    public static Node8 left(Node8 src) // move 0 leftward
     {
+        Node8 node = new Node8(src);
         if ((node.ZeroPos() != 0) && (node.ZeroPos() != 3) && (node.ZeroPos() != 6))
         {
           node.swap(node.ZeroPos(), node.ZeroPos() - 1);
@@ -71,8 +92,9 @@ public class Node8
           return null;
         }
       }
-    public static Node8 right(Node8 node) // move 0 leftward
+    public static Node8 right(Node8 src) // move 0 leftward
     {
+        Node8 node = new Node8(src);
         if ((node.ZeroPos() != 2) && (node.ZeroPos() != 5) && (node.ZeroPos() != 8))
         {
           node.swap(node.ZeroPos(), node.ZeroPos() + 1);

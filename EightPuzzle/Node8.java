@@ -1,18 +1,16 @@
 
 // each node is a state in the tree for the 8 puzzle
 
-package utils;
 
-import utils.Array;
 import java.util.Vector;
 import java.lang.Math;
 
-public class Node8 
+public class Node8 implements Comparable<Node8>
   {
-    public int h1; // heuristic based on number misplaced tiles
-    public int h2; // heuristic based on total Manhattan distance
+    public int h; // heuristic based on Misplace or Manhattan
+    public int f; // f value
     public Vector<String> path; // list of moves
-    private Array state; // an array used to store the state
+    private Vector<Integer> state; // an array used to store the state
     private static int[] goal = new int[] {1,2,3,8,0,4,7,6,5}; // the goal state
     private static Vector<int[]> IndexPos = ConstructIndex();
     // the correct position (x,y) for index i
@@ -22,16 +20,26 @@ public class Node8
     
     public Node8(String s) // this constructor should only be used to construct the initial state
     {      
-      state = new Array(StringToArray(s));
+      state = new Vector<Integer>(StringToArray(s));
       path = new Vector<String>();
-      CalculateHeuristics();
+      h = CalculateHeuristics();
     }
     
     public Node8(Node8 node)
     {
-      state = new Array(node.state);
+      state = new Vector<Integer>(node.state);
       path = new Vector<String>(node.path);
-      CalculateHeuristics();
+      h = CalculateHeuristics();
+    }
+    
+    public int compareTo(Node8 node)
+    {
+      if (f < node.f)
+        return -1;
+      else if (f == node.f)
+        return 0;
+      else
+        return 1;
     }
     
     public void printPath()
@@ -123,9 +131,9 @@ public class Node8
       return true;
     }
 
-    private Array StringToArray(String s)// convert from string to an array of numbers
+    private Vector<Integer> StringToArray(String s)// convert from string to an array of numbers
     {
-      Array state_array = new Array();
+      Vector<Integer> state_array = new Vector<Integer>();
       for (int i = 1; i < 18; i+=2)
       {
         state_array.add(Character.getNumericValue(s.charAt(i)));
@@ -135,25 +143,21 @@ public class Node8
     
     private int ZeroPos() // find the index of zero
     {
-      return state.find(0);
+      return state.indexOf(0);
     }
     
     private void swap(int i, int j)
     {
-      if (i > j) // make sure that i < j
-      {
-        int temp = i;
-        i = j;
-        j = temp;
-      }
-      state.swap(i,j);
+      int temp = state.get(i);
+      state.set(i,(state.get(j)));
+      state.set(j,temp);
     }
     
-    private void CalculateHeuristics()
+    private int CalculateHeuristics()
     {
       int num;
-      h1 = 0;
-      h2 = 0;
+      int h1 = 0;
+      int h2 = 0;
       for (int i = 0; i < state.size(); i++)
       {
         num = state.get(i);
@@ -164,6 +168,12 @@ public class Node8
           h2 += Math.abs(IndexPos.get(i)[0] - ManhattanPos.get(num)[0]) + Math.abs(IndexPos.get(i)[1] - ManhattanPos.get(num)[1]);
         }
       }
+      if (EightPuzzle.heuristic.equals("MISPLACE"))
+        return h1;
+      else if (EightPuzzle.heuristic.equals("MANHATTAN"))
+        return h2;
+      else
+        return -1;
     }
     
     private static Vector<int[]> ConstructManhattan()

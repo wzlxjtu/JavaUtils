@@ -1,10 +1,9 @@
 
 // This file implements a bunch of search algorithms for eight puzzle game
-package utils;
 
-import utils.Node8;
 import java.util.Vector;
 import java.util.Hashtable;
+import java.util.Collections;
 
 public class Search
 {
@@ -57,17 +56,49 @@ public class Search
                 nodeList = Que_Fn_DLS(nodeList, node, depth_limit);
             if (Que_Fn.equals("GREEDY"))
                 nodeList = Que_Fn_GREEDY(nodeList, node);
+            if (Que_Fn.equals("ASTAR"))
+                nodeList = Que_Fn_ASTAR(nodeList, node);
         }
     }
+    
     
     private static Vector<Node8> Que_Fn_GREEDY(Vector<Node8> src, Node8 node)
     {
         Vector<Node8> expanded = expand(node);
         for (int i = 0; i < expanded.size(); i++)
         {
+            expanded.get(i).f = expanded.get(i).h;
             src.addElement(expanded.get(i));
         }
-        // Sort to be impelemented
+        Collections.sort(src);
+        return src;
+    }
+    
+    private static Vector<Node8> Que_Fn_ASTAR(Vector<Node8> src, Node8 node)
+    {
+        Vector<Node8> expanded = expand(node);
+        for (int i = 0; i < expanded.size(); i++)
+        {
+            expanded.get(i).f = expanded.get(i).h + expanded.get(i).depth();
+            src.addElement(expanded.get(i));
+        }
+        
+        // for (int i = 0; i < src.size(); i++)
+        // {
+        //     System.out.print(src.get(i).f + " ");
+        // }
+        
+        Collections.sort(src);
+        
+        // System.out.println("");
+        // for (int i = 0; i < src.size(); i++)
+        // {
+        //     System.out.print(src.get(i).f + " ");
+        // }
+        
+        // System.out.println("");
+        // System.out.println("");
+        
         return src;
     }
     

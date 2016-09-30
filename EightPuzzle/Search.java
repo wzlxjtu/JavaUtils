@@ -1,5 +1,5 @@
 
-// This file implements a bunch of search algorithms for eight puzzle game
+// This file implements six search algorithms for eight puzzle game (BFS, DFS, IDS, GREEDY, ASTAR, IDA)
 
 import java.util.Vector;
 import java.util.Hashtable;
@@ -9,6 +9,7 @@ public class Search
 {
     public static int nodeVisited;
     public static int maxLength;
+    public static int f_limit, f_limit_min_exceeded; // used to record IDA limit
     
     public static Node8 GeneralSearch(Node8 problem, String Que_Fn)
     {
@@ -18,8 +19,11 @@ public class Search
         nodeVisited = 0;
         maxLength = 0;
         int depth_limit = 0;
+        f_limit_min_exceeded = 99999;
+        problem.f = problem.h + problem.depth();
+        f_limit = problem.f;
         
-        nodeList.add(problem);
+        nodeList.add(problem); // nodeList is the queue. problem is the root node here
 
         while(true)
         {
@@ -32,12 +36,19 @@ public class Search
                     depth_limit++;
                     nodeList.add(problem);
                 }
+                else if (Que_Fn.equals("IDA"))
+                {
+                    f_limit = f_limit_min_exceeded;
+                    f_limit_min_exceeded = 99999;
+                    nodeList.add(problem);
+                }
                 else
                 {
                     System.out.println("No Solution!");
                     return null;
                 }
             }
+            // dequeue the first element
             node = nodeList.firstElement();
             nodeList.removeElementAt(0);
             nodeVisited++;
@@ -58,9 +69,32 @@ public class Search
                 nodeList = Que_Fn_GREEDY(nodeList, node);
             if (Que_Fn.equals("ASTAR"))
                 nodeList = Que_Fn_ASTAR(nodeList, node);
+            if (Que_Fn.equals("IDA"))
+                nodeList = Que_Fn_IDA(nodeList, node);
         }
     }
     
+    private static Vector<Node8> Que_Fn_IDA(Vector<Node8> src, Node8 node)
+    {
+        Vector<Node8> expanded = expand(node);
+        Node8 temp;
+        for (int i = 0; i < expanded.size(); i++)
+        {
+            temp = expanded.get(i);
+            temp.f = temp.h + temp.depth();
+            if (temp.f <= f_limit)
+            {
+                src.insertElementAt(expanded.get(i), src.size());
+            }
+            else
+            {
+                if (temp.f < f_limit_min_exceeded)
+                    f_limit_min_exceeded = temp.f;
+            }
+        }
+        Collections.sort(src); // sort the queue according to the f value
+        return src;
+    }
     
     private static Vector<Node8> Que_Fn_GREEDY(Vector<Node8> src, Node8 node)
     {
@@ -82,23 +116,7 @@ public class Search
             expanded.get(i).f = expanded.get(i).h + expanded.get(i).depth();
             src.addElement(expanded.get(i));
         }
-        
-        // for (int i = 0; i < src.size(); i++)
-        // {
-        //     System.out.print(src.get(i).f + " ");
-        // }
-        
         Collections.sort(src);
-        
-        // System.out.println("");
-        // for (int i = 0; i < src.size(); i++)
-        // {
-        //     System.out.print(src.get(i).f + " ");
-        // }
-        
-        // System.out.println("");
-        // System.out.println("");
-        
         return src;
     }
     
@@ -139,6 +157,7 @@ public class Search
         }
     }
     
+    // expand the current node and stores all the children in a vector
     private static Vector<Node8> expand(Node8 node)
     {
         Vector<Node8> expandedList = new Vector<Node8>();

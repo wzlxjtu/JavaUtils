@@ -1,6 +1,5 @@
 
-// each node is a state in the tree for the 8 puzzle
-
+// each node represents a state in the search tree for the 8 puzzle
 
 import java.util.Vector;
 import java.lang.Math;
@@ -63,6 +62,7 @@ public class Node8 implements Comparable<Node8>
     {
       return path.size();
     }
+    
     // After each movement, a new node is generated
     public static Node8 up(Node8 src) // move 0 upward
     {
@@ -78,6 +78,7 @@ public class Node8 implements Comparable<Node8>
           return null;
         }
     }
+    
     public static Node8 down(Node8 src) // move 0 downward
     {
         Node8 node = new Node8(src);
@@ -92,6 +93,7 @@ public class Node8 implements Comparable<Node8>
           return null;
         }
     }
+    
     public static Node8 left(Node8 src) // move 0 leftward
     {
         Node8 node = new Node8(src);
@@ -105,7 +107,8 @@ public class Node8 implements Comparable<Node8>
         {
           return null;
         }
-      }
+    }
+    
     public static Node8 right(Node8 src) // move 0 leftward
     {
         Node8 node = new Node8(src);
@@ -146,14 +149,14 @@ public class Node8 implements Comparable<Node8>
       return state.indexOf(0);
     }
     
-    private void swap(int i, int j)
+    private void swap(int i, int j) // swap two integers
     {
       int temp = state.get(i);
       state.set(i,(state.get(j)));
       state.set(j,temp);
     }
     
-    private int CalculateHeuristics()
+    private int CalculateHeuristics() // calculate the MISPLACE and MANHATTAN distance as heuristics
     {
       int num;
       int h1 = 0;

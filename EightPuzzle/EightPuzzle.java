@@ -5,11 +5,10 @@ import java.util.Hashtable;
 
 public class EightPuzzle
 {
-  public static String method = "ASTAR"; // BFS, DFS, IDS, GREEDY, ASTAR, IDA
+  public static String method = "IDA"; // BFS, DFS, IDS, GREEDY, ASTAR, IDA
   public static String heuristic = "MANHATTAN"; // "MANHATTAN" or "MISPLACE" or ""
   public static String level = "HARD"; // EASY, MEDIUM or HARD
   
-
   public static void main(String[] args)
   {
     Hashtable<String, String> levels = new Hashtable<String, String>();
@@ -20,7 +19,7 @@ public class EightPuzzle
     
     Node8 init = new Node8(levels.get(level)); // initial state
     
-    Node8 solution = Search.GeneralSearch(init, method);
+    Node8 solution = Search.GeneralSearch(init, method); // the interface for all search algorithms
     
     if (solution == null)
       return;
@@ -28,7 +27,6 @@ public class EightPuzzle
     System.out.println("Node visited: " + Search.nodeVisited);
     System.out.println("Max list length: " + Search.maxLength);
     System.out.println("Depth: " + solution.depth());
-    
   }
   
 }

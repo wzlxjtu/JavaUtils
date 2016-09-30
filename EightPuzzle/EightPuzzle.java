@@ -1,4 +1,6 @@
 
+// This is the main entrance of the Eight Puzzle problem
+// To execute, enter the following command:
 // javac EightPuzzle.java && java EightPuzzle
 
 import java.util.Hashtable;

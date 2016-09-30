@@ -1,14 +1,14 @@
 
-// This file implements six search algorithms for eight puzzle game (BFS, DFS, IDS, GREEDY, ASTAR, IDA)
+// This file implements six search algorithms for eight puzzle game:
+// BFS, DFS, IDS, GREEDY, ASTAR, IDA*
 
 import java.util.Vector;
-import java.util.Hashtable;
 import java.util.Collections;
 
 public class Search
 {
-    public static int nodeVisited;
-    public static int maxLength;
+    public static int nodeVisited; // used to record the total number of node visited
+    public static int maxLength; // used to record the maximum length of the queue
     public static int f_limit, f_limit_min_exceeded; // used to record IDA limit
     
     public static Node8 GeneralSearch(Node8 problem, String Que_Fn)
@@ -84,7 +84,7 @@ public class Search
             temp.f = temp.h + temp.depth();
             if (temp.f <= f_limit)
             {
-                src.insertElementAt(expanded.get(i), src.size());
+                src.insertElementAt(expanded.get(i), 0);
             }
             else
             {
@@ -92,7 +92,6 @@ public class Search
                     f_limit_min_exceeded = temp.f;
             }
         }
-        Collections.sort(src); // sort the queue according to the f value
         return src;
     }
     

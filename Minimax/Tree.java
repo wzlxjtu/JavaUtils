@@ -11,17 +11,17 @@ public class Tree
     public static Node createTree(String input)
     {
         index = 0;
-        Node root = new Node(null,null,true);
+        Node root = new Node(null,null,true,null);
         parseInput(input.substring(1, input.length() - 1), root);
         return root;
     }
     
-    public static void parseInput(String input, Node parent)
+    public static void parseInput(String input, Node parent) // call this function recursively and parse a string input into a tree
     {
         boolean m = !parent.minmax; // flip between min and max layer
         while (index < input.length())
         {
-            Node node = new Node(null, parent, m);
+            Node node = new Node(null, parent, m, null);
             char c = input.charAt(index);
             index++;
             if (c == ' ')
@@ -39,35 +39,26 @@ public class Tree
             }
             else if (c == '-')
             {
-                node.v =  Integer.parseInt(input.substring(index-1, index+1));
+                node.data.v =  Integer.parseInt(input.substring(index-1, index+1));
                 parent.children.add(node);
                 index++;
             }
             else
             {
-                node.v =  Character.getNumericValue(c);
+                node.data.v =  Character.getNumericValue(c);
                 parent.children.add(node);
             }
         }
         return;
     }
     
-    public static <E> void printVector(Vector<E> inputArray)
+    public static <E> void printPath(Vector<E> inputArray) // print the path of a solution
     {
-        for (int i = 0; i < inputArray.size(); i++)
-            System.out.print(inputArray.get(i));
+        System.out.print("Path: ");
+        for (int i = inputArray.size() - 1; i >= 0 ; i--)
+            System.out.print(inputArray.get(i) + " ");
         System.out.println("");
     }
     
-    // public static void printTree(Node node)
-    // {
-    //     System.out.println(node.v);
-    //     int i = 0;
-    //     while(i < node.children.size())
-    //     {
-    //         printTree(node.children.get(i));
-    //         i++;
-    //     }
-    // }
 }
 

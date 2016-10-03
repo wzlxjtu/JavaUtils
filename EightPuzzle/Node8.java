@@ -134,6 +134,14 @@ public class Node8 implements Comparable<Node8>
       return true;
     }
 
+    public String ArrayToString()
+    {
+      String formatted = "(" + Integer.toString(state.get(0)) + " " + Integer.toString(state.get(1)) + " " + Integer.toString(state.get(2)) + " " + Integer.toString(state.get(3)) 
+        + " " + Integer.toString(state.get(4)) + " " + Integer.toString(state.get(5)) + " " + Integer.toString(state.get(6)) + " " + Integer.toString(state.get(7)) 
+        + " " + Integer.toString(state.get(8)) + ")";
+      return formatted;
+    }
+    
     private Vector<Integer> StringToArray(String s)// convert from string to an array of numbers
     {
       Vector<Integer> state_array = new Vector<Integer>();

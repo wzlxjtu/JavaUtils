@@ -7,8 +7,8 @@ import java.util.Hashtable;
 
 public class EightPuzzle
 {
-  public static String method = "IDA"; // BFS, DFS, IDS, GREEDY, ASTAR, IDA
-  public static String heuristic = "MANHATTAN"; // "MANHATTAN" or "MISPLACE" or ""
+  public static String method = "ASTAR"; // BFS, DFS, IDS, GREEDY, ASTAR, IDA
+  public static String heuristic = "MISPLACE"; // "MANHATTAN" or "MISPLACE" or ""
   public static String level = "HARD"; // EASY, MEDIUM or HARD
   
   public static void main(String[] args)

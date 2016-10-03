@@ -4,12 +4,13 @@
 
 import java.util.Vector;
 import java.util.Collections;
-
+import java.util.Hashtable;
 public class Search
 {
     public static int nodeVisited; // used to record the total number of node visited
     public static int maxLength; // used to record the maximum length of the queue
     public static int f_limit, f_limit_min_exceeded; // used to record IDA limit
+    
     
     public static Node8 GeneralSearch(Node8 problem, String Que_Fn)
     {
@@ -22,9 +23,10 @@ public class Search
         f_limit_min_exceeded = Integer.MAX_VALUE;
         problem.f = problem.h + problem.depth();
         f_limit = problem.f;
+        Hashtable<String, Boolean> visited_nodes = new Hashtable<String, Boolean>(); // the hash table used to check duplicates. true for already visited nodes
         
         nodeList.add(problem); // nodeList is the queue. problem is the root node here
-
+        
         while(true)
         {
             if (nodeList.size() > maxLength)
@@ -38,7 +40,6 @@ public class Search
                 }
                 else if (Que_Fn.equals("IDA"))
                 {
-                    System.out.println("f-limit: " + f_limit_min_exceeded);
                     f_limit = f_limit_min_exceeded;
                     f_limit_min_exceeded = Integer.MAX_VALUE;;
                     nodeList.add(problem);
@@ -53,6 +54,16 @@ public class Search
             node = nodeList.firstElement();
             nodeList.removeElementAt(0);
             nodeVisited++;
+            
+            
+            // this is used to check duplicates. if duplicate is found, skip this turn
+            if ((Que_Fn.equals("BFS")) || (Que_Fn.equals("DFS")) || (Que_Fn.equals("GREEDY")) || (Que_Fn.equals("ASTAR")))
+            {
+                if 	(visited_nodes.containsKey(node.ArrayToString()))
+                    continue;
+                else
+                    visited_nodes.put(node.ArrayToString(),true);
+            }
             
             if (Node8.Solved(node))
             {

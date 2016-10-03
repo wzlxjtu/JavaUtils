@@ -24,8 +24,19 @@ public class Traverse
             node = nodeList.firstElement();
             nodeList.removeElementAt(0);
             
-            // FOR PRINT HERE
-            System.out.println(node.v);
+            // System.out.println(node.alpha);
+            
+            // PRINT alpha or beta
+            // if (node.alpha == Integer.MIN_VALUE)
+            //     System.out.print("  n");
+            // else
+            //     System.out.format("%3d", node.alpha);
+            
+            // PRINT value
+            if (node.data.v != null)
+                System.out.format("%3d", node.data.v);
+            else
+                System.out.print("  n");
             
             if (Que_Fn.equals("BFS"))
                 nodeList = Que_Fn_BFS(nodeList, node);

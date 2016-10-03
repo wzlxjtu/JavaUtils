@@ -19,7 +19,7 @@ public class Search
         nodeVisited = 0;
         maxLength = 0;
         int depth_limit = 0;
-        f_limit_min_exceeded = 99999;
+        f_limit_min_exceeded = Integer.MAX_VALUE;
         problem.f = problem.h + problem.depth();
         f_limit = problem.f;
         
@@ -38,8 +38,9 @@ public class Search
                 }
                 else if (Que_Fn.equals("IDA"))
                 {
+                    System.out.println("f-limit: " + f_limit_min_exceeded);
                     f_limit = f_limit_min_exceeded;
-                    f_limit_min_exceeded = 99999;
+                    f_limit_min_exceeded = Integer.MAX_VALUE;;
                     nodeList.add(problem);
                 }
                 else

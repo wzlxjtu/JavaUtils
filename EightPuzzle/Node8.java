@@ -1,5 +1,5 @@
 
-// each node represents a state in the search tree for the 8 puzzle
+// Each node represents a state in the search tree for the 8 puzzle
 
 import java.util.Vector;
 import java.lang.Math;

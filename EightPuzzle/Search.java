@@ -35,11 +35,13 @@ public class Search
             {
                 if (Que_Fn.equals("IDS"))
                 {
+                    visited_nodes.clear();
                     depth_limit++;
                     nodeList.add(problem);
                 }
                 else if (Que_Fn.equals("IDA"))
                 {
+                    visited_nodes.clear();
                     f_limit = f_limit_min_exceeded;
                     f_limit_min_exceeded = Integer.MAX_VALUE;;
                     nodeList.add(problem);
@@ -57,13 +59,10 @@ public class Search
             
             
             // this is used to check duplicates. if duplicate is found, skip this turn
-            if ((Que_Fn.equals("BFS")) || (Que_Fn.equals("DFS")) || (Que_Fn.equals("GREEDY")) || (Que_Fn.equals("ASTAR")))
-            {
-                if 	(visited_nodes.containsKey(node.ArrayToString()))
-                    continue;
-                else
-                    visited_nodes.put(node.ArrayToString(),true);
-            }
+            if 	(visited_nodes.containsKey(node.ArrayToString()))
+                continue;
+            else
+                visited_nodes.put(node.ArrayToString(),true);
             
             if (Node8.Solved(node))
             {
